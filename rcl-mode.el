@@ -59,7 +59,7 @@
   (if (bobp)
       (indent-line-to 0)
     (let ((not-indented t) cur-indent)
-      (if (looking-at "^[ \t]*[]}]") ; dedent on closing bracket and curly brace
+      (if (looking-at "^[ \t]*[]})]") ; dedent on closing parens
           (progn
 	    (save-excursion
 	      (forward-line -1)
@@ -70,11 +70,11 @@
         (save-excursion
 	  (while not-indented
 	    (forward-line -1)
-	    (if (looking-at "^[ \t]*[]}]") ; dedent on closing bracket and curly brace
+	    (if (looking-at "^[ \t]*[]})]") ; dedent on closing parens
 		(progn
 		  (setq cur-indent (current-indentation))
 		  (setq not-indented nil))
-	      (if (looking-at "^.*[[{]$") ; indent on open bracket and curly brace
+	      (if (looking-at "^.*[[{(]$") ; indent on open parens
 		  (progn
 		    (setq cur-indent (+ (current-indentation) rcl-default-indent)) ; Do the actual indenting
 		    (setq not-indented nil))
