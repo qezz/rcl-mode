@@ -20,13 +20,6 @@
 
 (defvar rcl-mode-hook nil)
 
-(defvar rcl-mode-map
-  (let ((map (make-keymap)))
-    (define-key map "\C-j" 'newline-and-indent)
-
-    map)
-  "Keymap for RCL major mode")
-
 (setq rcl-font-lock-keywords
       (let* (
              ;; define several category of keywords
@@ -98,7 +91,6 @@
 (defun rcl-mode ()
   (interactive)
   (kill-all-local-variables)
-  (use-local-map rcl-mode-map)
   (set-syntax-table rcl-mode-syntax-table)
 
   ;; Comment hint to `comment-dwim' emacs function, by default mapped to `M-;'
