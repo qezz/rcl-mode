@@ -44,39 +44,45 @@
 (defvar rcl-default-indent 2)
 
 (defun rcl-indent-line ()
-  "Indent current line as RCL code"
+  "Indent current line as RCL code.
+
+Attempts to perform the meaningful indentation of the current
+line, following some rules:
+
+If the cursor is between the beginning of the line and the actual
+code, it will be moved to the indentation.
+
+If the cursor is in the middle if the code line, it should stay
+at the same character, relative to indentation."
   (interactive)
-  (beginning-of-line)
 
-  ;; beginning of buffer - always indent to 0
-  (if (bobp)
-      (indent-line-to 0)
-    (let ((not-indented t) cur-indent)
-      (if (looking-at "^[ \t]*[]})]") ; dedent on closing parens
-          (progn
-	    (save-excursion
-	      (forward-line -1)
-	      (setq cur-indent (- (current-indentation) rcl-default-indent)))
-	    (if (< cur-indent 0)
-		(setq cur-indent 0)))
+  (let (indent
+        was-between-beginning-and-code
+        (orig-point (point))            ; save the original point
+        (point (point)))
+    (save-excursion
+      (back-to-indentation)
+      (setq indent (car (syntax-ppss))
+            was-between-beginning-and-code (and (<= orig-point (point))
+                                                (>= orig-point (line-beginning-position))))
 
-        (save-excursion
-	  (while not-indented
-	    (forward-line -1)
-	    (if (looking-at "^[ \t]*[]})]") ; dedent on closing parens
-		(progn
-		  (setq cur-indent (current-indentation))
-		  (setq not-indented nil))
-	      (if (looking-at "^.*[[{(]$") ; indent on open parens
-		  (progn
-		    (setq cur-indent (+ (current-indentation) rcl-default-indent)) ; Do the actual indenting
-		    (setq not-indented nil))
-		(if (bobp)
-		    (setq not-indented nil)))))))
+      ;; If the next character is a closing paren, decrease the indentation
+      (when (memq (char-after) '(?\) ?\} ?\]))
+        (setq indent (1- indent)))
 
-      (if cur-indent
-	  (indent-line-to cur-indent)
-	(indent-line-to 0)))))
+      ;; Recalculate the indentation
+
+      ;; Remove the current indentation
+      (delete-region (line-beginning-position)
+                     (point))
+
+      ;; Insert the new indentation
+      (indent-to (* rcl-default-indent indent)))
+
+    ;; If the cursor originally was between the beginning and the
+    ;; actual code, move it to indentation
+    (when was-between-beginning-and-code
+      (move-to-column (current-indentation) t))))
 
 (defvar rcl-mode-syntax-table
   (let ((rcl-mode-syntax-table (make-syntax-table)))
