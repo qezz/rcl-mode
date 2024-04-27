@@ -84,6 +84,9 @@
     (modify-syntax-entry ?/ ". 124b" rcl-mode-syntax-table)
     (modify-syntax-entry ?\n "> b" rcl-mode-syntax-table)
 
+    ;; Strings with double quotes
+    (modify-syntax-entry ?\" "\"" rcl-mode-syntax-table)
+
     rcl-mode-syntax-table)
   "Syntax table for rcl-mode")
 
