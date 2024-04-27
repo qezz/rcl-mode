@@ -2,6 +2,8 @@
 
 (Incomplete) Emacs mode for [RCL Configuration Language](https://github.com/ruuda/rcl)
 
+Currently provides syntax highlighting and indentation.
+
 ## Install
 
 From master:
