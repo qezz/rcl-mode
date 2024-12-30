@@ -23,7 +23,7 @@
 (setq rcl-font-lock-keywords
       (let* (
              ;; define several category of keywords
-             (x-keywords '("let" "for" "in" "not" "if" "and" "or" "assert" "trace" "type"))
+             (x-keywords '("let" "for" "in" "not" "if" "else" "and" "or" "assert" "trace" "type"))
              (x-types '("Bool" "Int" "String" "Null" "Dict" "List" "Set" "Dynamic"))
              (x-constants '("true" "false" "null" "f\".*\""))
              (x-comments '("//.*"))
